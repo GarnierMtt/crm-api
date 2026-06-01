@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MaterielsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -32,6 +34,17 @@ class Materiels
 
     #[ORM\ManyToOne(inversedBy: 'fk_materiels')]
     private ?LiensFibre $fk_liensFibre = null;
+
+    /**
+     * @var Collection<int, Incidents>
+     */
+    #[ORM\OneToMany(targetEntity: Incidents::class, mappedBy: 'fk_materiels')]
+    private Collection $fk_incidents;
+
+    public function __construct()
+    {
+        $this->fk_incidents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -97,6 +110,36 @@ class Materiels
     public function setFkLiensFibre(?LiensFibre $fk_liensFibre): static
     {
         $this->fk_liensFibre = $fk_liensFibre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Incidents>
+     */
+    public function getFkIncidents(): Collection
+    {
+        return $this->fk_incidents;
+    }
+
+    public function addFkIncident(Incidents $fkIncident): static
+    {
+        if (!$this->fk_incidents->contains($fkIncident)) {
+            $this->fk_incidents->add($fkIncident);
+            $fkIncident->setFkMateriels($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkIncident(Incidents $fkIncident): static
+    {
+        if ($this->fk_incidents->removeElement($fkIncident)) {
+            // set the owning side to null (unless already changed)
+            if ($fkIncident->getFkMateriels() === $this) {
+                $fkIncident->setFkMateriels(null);
+            }
+        }
 
         return $this;
     }

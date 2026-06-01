@@ -56,9 +56,16 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Taches::class, mappedBy: 'fk_utilisateurs')]
     private Collection $fk_taches;
 
+    /**
+     * @var Collection<int, Incidents>
+     */
+    #[ORM\ManyToMany(targetEntity: Incidents::class, mappedBy: 'fk_utilisateurs')]
+    private Collection $fk_incidents;
+
     public function __construct()
     {
         $this->fk_taches = new ArrayCollection();
+        $this->fk_incidents = new ArrayCollection();
     }
 
     /**
@@ -182,6 +189,33 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->fk_taches->removeElement($fkTach)) {
             $fkTach->removeFkUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Incidents>
+     */
+    public function getFkIncidents(): Collection
+    {
+        return $this->fk_incidents;
+    }
+
+    public function addFkIncident(Incidents $fkIncident): static
+    {
+        if (!$this->fk_incidents->contains($fkIncident)) {
+            $this->fk_incidents->add($fkIncident);
+            $fkIncident->addFkUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkIncident(Incidents $fkIncident): static
+    {
+        if ($this->fk_incidents->removeElement($fkIncident)) {
+            $fkIncident->removeFkUtilisateur($this);
         }
 
         return $this;

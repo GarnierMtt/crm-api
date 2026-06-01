@@ -74,9 +74,16 @@ class LiensFibre
     #[ORM\OneToMany(targetEntity: Materiels::class, mappedBy: 'fk_liensFibre')]
     private Collection $fk_materiels;
 
+    /**
+     * @var Collection<int, Incidents>
+     */
+    #[ORM\OneToMany(targetEntity: Incidents::class, mappedBy: 'fk_liens_fibre')]
+    private Collection $fk_incidents;
+
     public function __construct()
     {
         $this->fk_materiels = new ArrayCollection();
+        $this->fk_incidents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +262,36 @@ class LiensFibre
             // set the owning side to null (unless already changed)
             if ($fkMateriel->getFkLiensFibre() === $this) {
                 $fkMateriel->setFkLiensFibre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Incidents>
+     */
+    public function getFkIncidents(): Collection
+    {
+        return $this->fk_incidents;
+    }
+
+    public function addFkIncident(Incidents $fkIncident): static
+    {
+        if (!$this->fk_incidents->contains($fkIncident)) {
+            $this->fk_incidents->add($fkIncident);
+            $fkIncident->setFkLiensFibre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkIncident(Incidents $fkIncident): static
+    {
+        if ($this->fk_incidents->removeElement($fkIncident)) {
+            // set the owning side to null (unless already changed)
+            if ($fkIncident->getFkLiensFibre() === $this) {
+                $fkIncident->setFkLiensFibre(null);
             }
         }
 

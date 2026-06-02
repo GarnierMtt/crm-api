@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Repository\IncidentsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IncidentsRepository::class)]
+#[Gedmo\Loggable]
 class Incidents
 {
     #[ORM\Id]
@@ -117,6 +121,7 @@ class Incidents
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkCriticites' => ['id', 'libelle']]])]
     public function getFkCriticites(): ?Criticites
     {
         return $this->fk_criticites;
@@ -129,6 +134,7 @@ class Incidents
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkLiensFibre' => ['id']]])]
     public function getFkLiensFibre(): ?LiensFibre
     {
         return $this->fk_liens_fibre;
@@ -141,6 +147,7 @@ class Incidents
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkMateriels' => ['id', 'libelle']]])]
     public function getFkMateriels(): ?Materiels
     {
         return $this->fk_materiels;
@@ -156,6 +163,7 @@ class Incidents
     /**
      * @return Collection<int, Utilisateurs>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkUtilisateurs' => ['id', 'nom']]])]
     public function getFkUtilisateurs(): Collection
     {
         return $this->fk_utilisateurs;

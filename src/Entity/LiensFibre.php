@@ -271,6 +271,7 @@ class LiensFibre
     /**
      * @return Collection<int, Incidents>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['FkIncidents' => ['id', 'titre']]])]
     public function getFkIncidents(): Collection
     {
         return $this->fk_incidents;

@@ -197,6 +197,7 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Incidents>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['FkIncidents' => ['id', 'titre']]])]
     public function getFkIncidents(): Collection
     {
         return $this->fk_incidents;

@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Repository\CriticitesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CriticitesRepository::class)]
+#[Gedmo\Loggable]
 class Criticites
 {
     #[ORM\Id]
@@ -49,6 +53,7 @@ class Criticites
     /**
      * @return Collection<int, Incidents>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkIncidents' => ['id', 'titre']]])]
     public function getFkIncidents(): Collection
     {
         return $this->fk_incidents;

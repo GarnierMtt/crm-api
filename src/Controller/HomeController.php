@@ -30,6 +30,8 @@ final class HomeController extends AbstractController
                 "modeles",
                 "taches",
                 "materiels",
+                "incidents",
+                "criticites",
             ];
 
 
